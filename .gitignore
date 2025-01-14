@@ -1,0 +1,11 @@
+*.c
+*.o
+*.vbr
+*.vector
+a.out
+body.ins
+
+.DS_Store
+.idea
+*.log
+tmp/
