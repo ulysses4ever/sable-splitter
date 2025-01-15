@@ -18,7 +18,8 @@ FILE=$2
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-echo "0. Restore original"
+echo "0. Cleanup old fooi's and restore original C file"
+rm -f foo*
 cp $FILE.orig $FILE 2>/dev/null || echo "WARN: No original.
 NOTE: If you create a backup copy of '$FILE' called '$FILE.orig' before running the script,
 we will use it to restore the original on every run."
