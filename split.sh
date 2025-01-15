@@ -18,7 +18,7 @@ FILE=$2
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-echo "0. Cleanup old fooi's and restore original C file"
+echo '0. Cleanup old foo$i''s and restore original C file'
 rm -f foo*
 cp $FILE.orig $FILE 2>/dev/null || echo "WARN: No original.
 NOTE: If you create a backup copy of '$FILE' called '$FILE.orig' before running the script,
@@ -51,7 +51,7 @@ void foo(float *y, const float* x, const float* val, int i_start, int i_end, int
 
 echo "5. Compiling and linking the result"
 for f in ./foo*.c; do
-    gcc -c -O3 $f &
+    gcc -c -O3 -Winline $f &
 done
 wait
 gcc -c -O3 -Wno-implicit-function-declaration $FILE
