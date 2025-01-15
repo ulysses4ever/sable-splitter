@@ -9,16 +9,20 @@ main = do
   [n', file] <- getArgs
   let n = read n' :: Int
   input <- readFile' file
-  let (prefix, rest) = break fooPrefixTest $ lines input
-      (foos, suffix) = span  fooPrefixTest rest
+  let (prefix, t1s:rest) = span prefixTest $ lines input
+      (compute, suffix) = span  fooEndTest rest
 
-  writeFile file $ unlines $ prefix ++ [replacement n] ++ suffix
+  writeFile "body.ins" $ unlines compute
+  writeFile file $ unlines $ prefix ++ [t1s, replacement n] ++ suffix
 
-fooPrefixTest :: String -> Bool
-fooPrefixTest = ("foo" `isPrefixOf`) . trimStart
+prefixTest :: String -> Bool
+prefixTest = not . ("long t1s" `isPrefixOf`) . trimStart
+
+fooEndTest :: String -> Bool
+fooEndTest = ("struct timeval t2;" /=) . trimStart
 
 replacement :: Int -> String
-replacement n = unlines $ [ "  foo" ++ show i ++ "(x,y,val);"| i <- [10..n+9]]
+replacement n = unlines $ [ "\tfoo" ++ show i ++ "(x,y,val);"| i <- [10..n+9]]
 
 trimStart :: String -> String
 trimStart = dropWhile isSpace

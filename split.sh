@@ -5,16 +5,24 @@
 # Compiles the result into a.out.
 #
 # Example run:
-#   ./split
+#   ./split 64 filename.c
+#
+# The arguments are $FILE and $N, resp.
 #
 # Depends on GHC being installed
+#
 
-FILE=worms20_10NN.c
-N=64 # number of chunks; 64 can be decreased but can't go higher than 89
+N=$1 # number of chunks; 64 can be decreased but can't go higher than 89
 N1=$(($N + 9)) # start from 10 rather than from 1
+FILE=$2
 
-echo "1. Put the original foo-calls in 'body.ins'"
-grep -E '^(\s*foo.*)' $FILE > body.ins
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
+echo "0. Restore original"
+cp $FILE.orig $FILE
+
+echo '1. Extract the original foo-calls in `body.ins` and put foo$i-calls instead'
+runhaskell "$SCRIPT_DIR/replace_foo.hs" $N $FILE
 
 echo "2. Split 'body.ins' into N"
 split -n r/$N body.ins foo --numeric-suffixes=10 --additional-suffix=".c"
@@ -22,11 +30,9 @@ split -n r/$N body.ins foo --numeric-suffixes=10 --additional-suffix=".c"
 echo "3. Patch the foo\$i.c: add funciton header and footer"
 for ((i=10; i<=$N1; i++)); do
     sed -i "1i void foo$i(float *x, float *y, float *val) {" "foo$i.c"
+#    sed -i "1i #include \"foo.h\"\nvoid foo$i(float *x, float *y, float *val) {" "foo$i.c"
     echo "}" >> "foo$i.c"
 done
-
-echo "4. Replace foo-calls with (fewer) foo\$i-calls (10<=i<N+9)"
-runhaskell ./replace_foo.hs $N $FILE
 
 echo "5. Compiling and linking the result"
 gcc -c -O3 -Wno-implicit-function-declaration $FILE ./foo*.c
