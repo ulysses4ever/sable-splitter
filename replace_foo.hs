@@ -12,8 +12,20 @@ main = do
   let (prefix, t1s:rest) = span prefixTest $ lines input
       (compute, suffix) = span  fooEndTest rest
 
-  writeFile "body.ins" $ unlines compute
+  writeFile "body.ins" $ fixupMultilineGroups compute
   writeFile file $ unlines $ prefix ++ [t1s, replacement n] ++ suffix
+
+fixupMultilineGroups :: [String] -> String
+fixupMultilineGroups =
+  unlines . reverse. go []
+  where
+    go acc [] = acc
+    go acc (x:xs)
+      | "float" `isPrefixOf` trimStart x = let
+            (block,rest) = span ('=' `elem`) xs
+          in
+            go (concat (x:block) : acc) rest
+      | otherwise = go (x:acc) xs
 
 prefixTest :: String -> Bool
 prefixTest = not . ("long t1s" `isPrefixOf`) . trimStart
