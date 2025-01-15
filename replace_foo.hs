@@ -16,16 +16,16 @@ main = do
   writeFile file $ unlines $ prefix ++ [t1s, replacement n] ++ suffix
 
 fixupMultilineGroups :: [String] -> String
-fixupMultilineGroups =
-  unlines . reverse. go []
-  where
-    go acc [] = acc
-    go acc (x:xs)
-      | "float" `isPrefixOf` trimStart x = let
-            (block,rest) = span ('=' `elem`) xs
-          in
-            go (concat (x:block) : acc) rest
-      | otherwise = go (x:acc) xs
+fixupMultilineGroups = unlines
+  -- . reverse. go []
+  -- where
+  --   go acc [] = acc
+  --   go acc (x:xs)
+  --     | "float" `isPrefixOf` trimStart x = let
+  --           (block,rest) = span ('=' `elem`) xs
+  --         in
+  --           go (concat (x:block) : acc) rest
+  --     | otherwise = go (x:acc) xs
 
 prefixTest :: String -> Bool
 prefixTest = not . ("long t1s" `isPrefixOf`) . trimStart
