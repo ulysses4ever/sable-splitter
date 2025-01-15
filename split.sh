@@ -19,7 +19,9 @@ FILE=$2
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 echo "0. Restore original"
-cp $FILE.orig $FILE 2>/dev/null || echo "No original"
+cp $FILE.orig $FILE 2>/dev/null || echo "WARN: No original.
+NOTE: If you create a backup copy of '$FILE' called '$FILE.orig' before running the script,
+we will use it to restore the original on every run."
 
 echo '1. Extract the original foo-calls in `body.ins` and put foo$i-calls instead'
 runhaskell "$SCRIPT_DIR/replace_foo.hs" $N $FILE
