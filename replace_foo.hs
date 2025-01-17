@@ -7,12 +7,12 @@ import Data.Char (isSpace)
 
 main :: IO ()
 main = do
-  [n', file, savedir] <- getArgs
+  [n', file] <- getArgs
   let n = read n' :: Int
   input <- readFile' file
   let (prefix, t1s:rest) = span prefixTest $ lines input
       (compute, suffix) = span  fooEndTest rest
-  writeFile (savedir ++ "/body.ins") $ fixupMultilineGroups compute
+  writeFile "./body.ins" $ fixupMultilineGroups compute
   writeFile file $ unlines $ prefix ++ [t1s, replacement n] ++ suffix
 
 fixupMultilineGroups :: [String] -> String
