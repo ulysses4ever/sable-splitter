@@ -39,7 +39,7 @@ done
 
 echo "4. Create foo.h with the SpMV kernel (function foo)"
 echo "
-inline
+inline __attribute__((always_inline))
 void foo(float *y, const float* x, const float* val, int i_start, int i_end, int j_start, int j_end, int val_offset) {
     for (int j = j_start; j < j_end; j++) {
   for (int i = i_start; i < i_end; i++) {
