@@ -1,4 +1,5 @@
 module Main where
+
 import System.Environment (getArgs)
 import Data.List (isPrefixOf)
 import System.IO (readFile')
@@ -6,13 +7,12 @@ import Data.Char (isSpace)
 
 main :: IO ()
 main = do
-  [n', file] <- getArgs
+  [n', file, savedir] <- getArgs
   let n = read n' :: Int
   input <- readFile' file
   let (prefix, t1s:rest) = span prefixTest $ lines input
       (compute, suffix) = span  fooEndTest rest
-
-  writeFile "body.ins" $ fixupMultilineGroups compute
+  writeFile (savedir ++ "/body.ins") $ fixupMultilineGroups compute
   writeFile file $ unlines $ prefix ++ [t1s, replacement n] ++ suffix
 
 fixupMultilineGroups :: [String] -> String
