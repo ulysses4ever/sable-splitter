@@ -22,7 +22,7 @@ N1=$(($N + 9)) # start from 10 rather than from 1
 FILE=$2
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-echo '0. Initialize working directory -- $SAVE_DIR -- in the current directory and CD there'
+echo '0. Initialize the working directory -- $SAVE_DIR -- and CD there'
 # $SAVE_DIR is the input file name without .c and the directory part
 FILE_NODIR="${FILE##*/}"  # Remove directory path -> "g7jac020.c"
 BASENAME="${FILE_NODIR%.c}"   # Remove ".c" extension -> "g7jac020"
@@ -30,8 +30,15 @@ SAVE_DIR="$BASENAME"
 rm -rf $SAVE_DIR
 mkdir -p $SAVE_DIR
 cp "$FILE" "$SAVE_DIR/$FILE_NODIR"
-echo "Save dir: $SAVE_DIR"
+echo "NOTE: Save dir is $SAVE_DIR"
 pushd "$SAVE_DIR" > /dev/null
+
+if [ "$N" -eq 0 ]; then
+    echo "Fast path: split into 0 pieces means just compile the input"
+    gcc -o "./$BASENAME" "$BASENAME.c"
+    popd > /dev/null
+    exit
+fi
 
 echo '1. Extract the original foo-calls into `body.ins` and put foo$i-calls instead'
 runhaskell "$SCRIPT_DIR/replace_foo.hs" $N "$FILE"
