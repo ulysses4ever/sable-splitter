@@ -21,6 +21,7 @@ N=$1 # number of chunks; 64 can be decreased but can't go higher than 89
 N1=$(($N + 9)) # start from 10 rather than from 1
 FILE=$2
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+C_OPTS="-O3 -mavx -mprefer-vector-width=512 -funroll-all-loops -Wno-implicit-function-declaration"
 
 echo '0. Initialize the working directory -- $SAVE_DIR -- and CD there'
 # $SAVE_DIR is the input file name without .c and the directory part
@@ -70,6 +71,6 @@ for f in ./foo*.c; do
     gcc -c -O3 -Winline $f &
 done
 wait
-gcc -c -O3 -Wno-implicit-function-declaration $FILE
+gcc -c $C_OPTS -Wno-implicit-function-declaration $FILE
 gcc -o "./$BASENAME" "$BASENAME.o" ./foo*.o
 popd > /dev/null
