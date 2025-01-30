@@ -36,7 +36,7 @@ pushd "$SAVE_DIR" > /dev/null
 
 if [ "$N" -eq 0 ]; then
     echo "Fast path: split into 0 pieces means just compile the input"
-    gcc -o "./$BASENAME" "$BASENAME.c"
+    gcc $C_OPTS -o "./$BASENAME" "$BASENAME.c"
     popd > /dev/null
     exit
 fi
