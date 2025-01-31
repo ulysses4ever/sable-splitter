@@ -27,7 +27,7 @@ echo '0. Initialize the working directory -- $SAVE_DIR -- and CD there'
 # $SAVE_DIR is the input file name without .c and the directory part
 FILE_NODIR="${FILE##*/}"  # Remove directory path -> "g7jac020.c"
 BASENAME="${FILE_NODIR%.c}"   # Remove ".c" extension -> "g7jac020"
-SAVE_DIR="$BASENAME"
+SAVE_DIR="./split-and-binaries/$BASENAME"
 rm -rf $SAVE_DIR
 mkdir -p $SAVE_DIR
 cp "$FILE" "$SAVE_DIR/$FILE_NODIR"
